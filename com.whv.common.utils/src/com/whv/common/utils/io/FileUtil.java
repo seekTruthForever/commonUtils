@@ -2,7 +2,14 @@ package com.whv.common.utils.io;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.whv.common.utils.MathUtil;
@@ -13,6 +20,92 @@ import com.whv.common.utils.MathUtil;
  *
  */
 public class FileUtil {
+	/**
+	 * 复制文件
+	 * @param src 源文件地址
+	 * @param target 目标文件地址
+	 */
+	public static void copy(String src,String target) {
+		File file = new File(src);
+		File targetFile = new File(target);
+		src = file.getAbsolutePath();
+		target = targetFile.getAbsolutePath();
+		if(!file.exists()) return;
+		if(file.isDirectory()) {
+			copyDirs(src, target);
+		}else {
+			copyFile(src, target);
+		}
+	}
+	/**
+	 * 复制目录
+	 * @param dirSrc 源目录地址
+	 * @param dirTarget 目标目录地址
+	 */
+	private static void copyDirs(String dirSrc,String dirTarget) {
+		List<File> files = getFileList(dirSrc, new ArrayList<File>());
+		for(File file : files) {
+			String src = file.getAbsolutePath();
+			String target = dirTarget+File.separator+src.substring(src.lastIndexOf(dirSrc)+1);
+			if(!new File(target).getParentFile().exists()) {
+				new File(target).getParentFile().mkdirs();
+			}
+			copyFile(src,target);
+		}
+	}
+	/**
+	 * 复制文件
+	 * @param src 源文件地址
+	 * @param target 目标文件地址
+	 */
+	private static void copyFile(String src,String target) {
+		 InputStream input = null;
+		 OutputStream out = null;
+		 File srcFile = new File(src);
+		 File targetFile = new File(target);
+		 if(!srcFile.exists()) return;
+		try {
+			if(!targetFile.getParentFile().exists()) {
+				targetFile.getParentFile().mkdirs();
+			}
+			input = new FileInputStream(srcFile);
+			out = new FileOutputStream(targetFile);
+	         byte[] b = new byte[1024 * 10];  
+	         int len = -1;  
+	         while ((len = input.read(b)) != -1) {  
+	             out.write(b, 0, len);  
+	         }  
+	         out.flush();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}  finally {
+			try {
+				if(input != null) input.close();
+				if(out != null) out.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}  
+		}
+	}
+	/**
+	 * 删除文件
+	 * @param path 路径
+	 */
+	public static boolean delete(String path) {
+		File file = new File(path);
+		if (!file.exists())  
+            return false;  
+        if (file.isFile()) {  
+            return file.delete();  
+        }  
+        File[] childFiles = file.listFiles();  
+        for (File f : childFiles) {  
+        	delete(f.getAbsolutePath());  
+        }  
+        return file.delete();  
+	}
 	/**
 	 * 获取目录下的所有文件列表
 	 * @param strPath 目录路径
