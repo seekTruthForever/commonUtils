@@ -155,7 +155,7 @@ public class PropOptUtil {
 	 * @param value 属性值
 	 */
 	public static void createProperties(String filePath,String key,String value,String charset){
-		createProperties(filePath, key, value, charset,false);
+		createProperties(filePath, key, value, charset,true);
 	}
 	/**
 	 * 写入属性值
@@ -164,7 +164,7 @@ public class PropOptUtil {
 	 * @param value 属性值
 	 */
 	public static void createPropertiesAB(String filePath,String key,String value,String charset){
-		createProperties(filePath, key, value, charset,true);
+		createProperties(filePath, key, value, charset,false);
 	}
 	/**
 	 * 写入属性值
@@ -180,11 +180,12 @@ public class PropOptUtil {
 	 * @param filePath 属性文件路径，类加载器相对路径
 	 * @param key 属性名称
 	 * @param value 属性值
+	 * @param isRelative 是否相对路径
 	 */
-	public static void createProperties(String filePath,String key,String value,String charset,boolean isAbsolute){
+	public static void createProperties(String filePath,String key,String value,String charset,boolean isRelative){
 		Properties properties = new Properties();
 		String url = null;
-		if(isAbsolute) {
+		if(isRelative) {
 			url = filePath;
 		}else {
 			url = PropOptUtil.class.getClassLoader().getResource(filePath).getPath();
