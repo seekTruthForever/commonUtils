@@ -27,7 +27,8 @@ public class DBUtils {
 		if(propsFile==null||"".equals(propsFile)) {
 			propsFile = "jdbc.properties";
 		}
-		jdbcProperties = PropOptUtil.getProperties(propsFile);
+		PropOptUtil propUtil = new PropOptUtil(propsFile);
+		jdbcProperties = propUtil.getProperties();
 		String username = jdbcProperties.getProperty("username");
 		String password = jdbcProperties.getProperty("password");
 		String driver = jdbcProperties.getProperty("driver");
