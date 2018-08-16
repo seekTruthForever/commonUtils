@@ -5,9 +5,17 @@ import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 /**
  * Stringπ§æﬂ¿‡£∫∆•≈‰
  * @author huawei
@@ -431,14 +439,14 @@ public class StringUtils {
 	        return longVal;
 	    }
 
-	    public static float stringToFloat(String floatstr) {
+	    public static float str2Float(String floatstr) {
 	        Float floatee;
 	        floatee = Float.valueOf(floatstr);
 	        return floatee.floatValue();
 	    }
 
 	    //change the float type to the string type
-	    public static String floatToString(float value) {
+	    public static String float2Str(float value) {
 	        Float floatee = new Float(value);
 	        return floatee.toString();
 	    }
@@ -580,7 +588,7 @@ public class StringUtils {
 	     * @param text
 	     * @return
 	     */
-	    public static String StringToUnicode(String text) {
+	    public static String str2Unicode(String text) {
 	        String result = "";
 	        int input;
 	        StringReader isr;
@@ -760,7 +768,7 @@ public class StringUtils {
 	          text = text.substring(p, text.length());
 	          if (text == "" || text.length() < 9) return result;
 
-	          result += CodeToWord(text.substring(0, 9));
+	          result += code2Word(text.substring(0, 9));
 	          text = text.substring(9, text.length());
 	          p = text.indexOf("%e");
 	        }
@@ -775,7 +783,7 @@ public class StringUtils {
 	     * @param text
 	     * @return
 	     */
-	    private static final String CodeToWord(String text) {
+	    private static final String code2Word(String text) {
 	      String result;
 
 	      if (Utf8codeCheck(text)) {
@@ -826,12 +834,200 @@ public class StringUtils {
 	      }
 	      return Utf8codeCheck(text);
 	    }
-	    public static void main(String[] args) {
-	        String aaa = "app_version_fld";
-	        System.out.println(ul2camel(aaa));
-	        System.out.println(ul2camel2(aaa));
-	        aaa = "appVersionFld";
-	        System.out.println(camel2ul(aaa));
-	    
+	    public static boolean isEmpty(String str)
+	    {
+	      return (str == null) || (str.length() == 0);
 	    }
+
+	    public static boolean isNotEmpty(String str)
+	    {
+	      return (str != null) && (str.length() > 0);
+	    }
+
+	    public static boolean isBlank(String str)
+	    {
+	      int strLen;
+	      if ((str == null) || ((strLen = str.length()) == 0))
+	        return true;
+	      for (int i = 0; i < strLen; i++) {
+	        if (!Character.isWhitespace(str.charAt(i))) {
+	          return false;
+	        }
+	      }
+	      return true;
+	    }
+
+	    public static boolean isNotBlank(String str)
+	    {
+	      int strLen;
+	      if ((str == null) || ((strLen = str.length()) == 0))
+	        return false;
+	      for (int i = 0; i < strLen; i++) {
+	        if (!Character.isWhitespace(str.charAt(i))) {
+	          return true;
+	        }
+	      }
+	      return false;
+	    }
+	    public static String join(Object[] array)
+	    {
+	      return join(array, null);
+	    }
+
+	    public static String join(Object[] array, char separator)
+	    {
+	      if (array == null) {
+	        return null;
+	      }
+	      int arraySize = array.length;
+	      int bufSize = arraySize == 0 ? 0 : 
+	        ((array[0] == null ? 16 : 
+	        array[0].toString().length()) + 1) * 
+	        arraySize;
+	      StringBuffer buf = new StringBuffer(bufSize);
+
+	      for (int i = 0; i < arraySize; i++) {
+	        if (i > 0) {
+	          buf.append(separator);
+	        }
+	        if (array[i] != null) {
+	          buf.append(array[i]);
+	        }
+	      }
+	      return buf.toString();
+	    }
+
+	    public static String join(Object[] array, String separator)
+	    {
+	      if (array == null) {
+	        return null;
+	      }
+	      if (separator == null) {
+	        separator = "";
+	      }
+	      int arraySize = array.length;
+
+	      int bufSize = arraySize == 0 ? 0 : 
+	        arraySize * (
+	        (array[0] == null ? 16 : 
+	        array[0].toString().length()) + (separator != null ? 
+	        separator.length() : 0));
+
+	      StringBuffer buf = new StringBuffer(bufSize);
+
+	      for (int i = 0; i < arraySize; i++) {
+	        if ((separator != null) && (i > 0)) {
+	          buf.append(separator);
+	        }
+	        if (array[i] != null) {
+	          buf.append(array[i]);
+	        }
+	      }
+	      return buf.toString();
+	    }
+
+	    public static String join(Iterator iterator, char separator)
+	    {
+	      if (iterator == null) {
+	        return null;
+	      }
+	      StringBuffer buf = new StringBuffer(256);
+
+	      while (iterator.hasNext()) {
+	        Object obj = iterator.next();
+	        if (obj != null) {
+	          buf.append(obj);
+	        }
+	        if (iterator.hasNext()) {
+	          buf.append(separator);
+	        }
+	      }
+	      return buf.toString();
+	    }
+
+	    public static String join(Iterator iterator, String separator)
+	    {
+	      if (iterator == null) {
+	        return null;
+	      }
+	      StringBuffer buf = new StringBuffer(256);
+
+	      while (iterator.hasNext()) {
+	        Object obj = iterator.next();
+	        if (obj != null) {
+	          buf.append(obj);
+	        }
+	        if ((separator != null) && (iterator.hasNext())) {
+	          buf.append(separator);
+	        }
+	      }
+	      return buf.toString();
+	    }
+	    public static boolean hasText(CharSequence str)
+	    {
+	      if (!hasLength(str)) {
+	        return false;
+	      }
+	      int strLen = str.length();
+	      for (int i = 0; i < strLen; i++) {
+	        if (!Character.isWhitespace(str.charAt(i))) {
+	          return true;
+	        }
+	      }
+	      return false;
+	    }
+
+	    public static boolean hasText(String str)
+	    {
+	      return hasText(str);
+	    }
+	    public static boolean hasLength(CharSequence str)
+	    {
+	      return (str != null) && (str.length() > 0);
+	    }
+
+	    public static boolean hasLength(String str)
+	    {
+	      return hasLength(str);
+	    }
+	    public static String[] tokenizeToStringArray(String str, String delimiters)
+	    {
+	      return tokenizeToStringArray(str, delimiters, true, true);
+	    }
+
+	    public static String[] tokenizeToStringArray(String str, String delimiters, boolean trimTokens, boolean ignoreEmptyTokens)
+	    {
+	      if (str == null) {
+	        return null;
+	      }
+	      StringTokenizer st = new StringTokenizer(str, delimiters);
+	      List tokens = new ArrayList();
+	      while (st.hasMoreTokens()) {
+	        String token = st.nextToken();
+	        if (trimTokens) {
+	          token = token.trim();
+	        }
+	        if ((!ignoreEmptyTokens) || (token.length() > 0)) {
+	          tokens.add(token);
+	        }
+	      }
+	      return toStringArray(tokens);
+	    }
+	    public static String[] toStringArray(Collection<String> collection)
+	    {
+	      if (collection == null) {
+	        return null;
+	      }
+	      return (String[])collection.toArray(new String[collection.size()]);
+	    }
+
+	    public static String[] toStringArray(Enumeration<String> enumeration)
+	    {
+	      if (enumeration == null) {
+	        return null;
+	      }
+	      List list = (List)Collections.list(enumeration);
+	      return (String[])list.toArray(new String[list.size()]);
+	    }
+
 }
