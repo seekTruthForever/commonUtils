@@ -6,7 +6,10 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.whv.common.utils.Mymap;
+import com.whv.common.utils.io.FileTreeUtil;
 import com.whv.common.utils.io.FileUtil;
+import com.whv.common.utils.json.JsonUtil;
 
 public class FileTest {
 
@@ -41,6 +44,12 @@ public class FileTest {
 			sb.append("\n");
 		}
 		System.out.println(sb.toString());
+	}
+	@Test
+	public void testFileTree1() {
+		Mymap mymap = FileTreeUtil.getFileTree("F:\\PDF电子书", null, null);
+		System.out.println(mymap.getMymap());
+		System.out.println(mymap.getData("F:\\PDF电子书\\notes"));
 	}
 
 }
