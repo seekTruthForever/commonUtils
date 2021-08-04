@@ -48,8 +48,10 @@ public class FileTest {
 	@Test
 	public void testFileTree1() {
 		Mymap mymap = FileTreeUtil.getFileTree("F:\\PDF电子书", null, null);
-		System.out.println(mymap.getMymap());
-		System.out.println(mymap.getData("F:\\PDF电子书\\notes"));
+		System.out.println(JsonUtil.object2JsonStr(mymap.getMymap()));
+		System.out.println(JsonUtil.object2JsonStr(mymap.getData("F:\\PDF电子书\\notes")));
+		Mymap mymap2 = FileTreeUtil.getFileTree("F:\\PDF电子书", ".pdf", ".*java.*");
+		System.out.println(JsonUtil.object2JsonStr(mymap2.getMymap()));
 	}
 
 }
