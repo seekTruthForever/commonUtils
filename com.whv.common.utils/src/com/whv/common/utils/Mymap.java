@@ -14,28 +14,40 @@ public class Mymap{
         return mymap;
     }
 
+    /**
+     * 无参构造
+     */
     public Mymap(){
-        this.splitFlag = DEFAULT_SPLIT_FLAG;
-        this.mymap = new HashMap();
+        this.init();
     }
+
+    /**
+     * 有参构造
+     * @param dataMap 默认数据Map
+     * @param mapKey 新增数据的key
+     * @param data 新增的数据
+     */
     public Mymap(Map dataMap, String mapKey,Object data){
-        this.splitFlag = DEFAULT_SPLIT_FLAG;
-        this.mymap = dataMap;
-        equipMapData(this.mymap,mapKey,data,0);
+        this(DEFAULT_SPLIT_FLAG,dataMap,mapKey,data);
     }
+
+    /**
+     * 有参构造
+     * @param keySplit map的key层级之间的分隔符
+     * @param dataMap 默认数据Map
+     * @param mapKey 新增数据的key
+     * @param data 新增的数据
+     */
     public Mymap(String keySplit,Map dataMap, String mapKey,Object data){
-        if(keySplit!=null&&keySplit.length()>0){
-            this.splitFlag = keySplit;
-        }
-        this.mymap = dataMap;
-        equipMapData(this.mymap,mapKey,data,0);
+        this.init(keySplit,dataMap);
+        this.equipData(mapKey,data);
     }
 
     /**
      * 初始化
      */
     public void init(){
-        this.mymap = new HashMap();
+        this.init(DEFAULT_SPLIT_FLAG,new HashMap());
     }
 
     /**
@@ -43,12 +55,25 @@ public class Mymap{
      * @param keySplit 分隔符
      */
     public void init(String keySplit){
-        if(keySplit!=null&&keySplit.length()>0){
-            this.splitFlag = keySplit;
-        }
-        this.init();
+        this.init(keySplit,new HashMap());
     }
+    /**
+     * 初始化
+     * @param dataMap 默认map
+     */
     public void init(Map dataMap){
+        this.init(DEFAULT_SPLIT_FLAG,dataMap);
+    }
+    /**
+     * 初始化
+     * @param keySplit 分隔符
+     * @param dataMap 默认map
+     */
+    public void init(String keySplit,Map dataMap){
+        if(keySplit==null || keySplit.length()==0){
+            keySplit = DEFAULT_SPLIT_FLAG;
+        }
+        this.splitFlag = keySplit;
         this.mymap = dataMap;
     }
 
